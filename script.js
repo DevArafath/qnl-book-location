@@ -28,8 +28,8 @@ function populateNumberDropdown(buttonNumber) {
     numberDropdown.appendChild(defaultOption);
 
     let options = [];
-    if (buttonNumber === 1) options = Array.from({ length: 14 }, (_, i) => i + 1);
-    else if (buttonNumber === 2) options = Array.from({ length: 10 }, (_, i) => i + 1);
+    if (buttonNumber === 1) options = Array.from({ length: 7 }, (_, i) => i + 1);
+    else if (buttonNumber === 2) options = Array.from({ length: 7 }, (_, i) => i + 1);
     else if (buttonNumber === 3) options = Array.from({ length: 5 }, (_, i) => i + 1);
 
     options.forEach(num => {
@@ -58,7 +58,7 @@ function populateAdditionalDropdown() {
     additionalDropdown.appendChild(defaultOption);
 
     let options = [];
-    if (selectedButton) options = Array.from({ length: 14 }, (_, i) => i + 1);
+    if (selectedButton) options = Array.from({ length: 50 }, (_, i) => i + 1);
 
     options.forEach(option => {
         const opt = document.createElement('option');
@@ -101,7 +101,7 @@ function goToStep(stepId) {
 
 // Prepare the final choice with the label input
 function prepareFinalChoice() {
-    labelInput = document.getElementById('labelInput').value.trim();
+    labelInput = document.getElementById('labelInput').value.trim().toUpperCase();
     return {
         text: `TIRE: ${selectedButton}. FLOOR: ${selectedNumber}. SHELF: ${additionalOption}.${finalOption}`,
         labelInput: labelInput, // Store the label input separately
@@ -155,14 +155,16 @@ function displaySavedSelections() {
         label.innerHTML = `<div>${stepsLine}</div><div>${labelLine}</div>`;
         if (selection.done) {
             label.style.textDecoration = "line-through";
+            label.style.color = "lightgray"; // Change font color
+            label.style.fontStyle = "italic"; // Make text italic
         }
 
         const doneButton = document.createElement('button');
-        doneButton.innerHTML = `<i class="fas fa-check"></i> DONE`;
+        doneButton.innerHTML = `<i class="fas fa-check" style="margin-bottom:5px;"></i> DONE`;
         doneButton.onclick = () => markDone(index);
 
         const delButton = document.createElement('button');
-        delButton.innerHTML = `<i class="fas fa-trash"></i> DEL`;
+        delButton.innerHTML = `<i class="fas fa-trash" style="margin-bottom:5px;"></i> DEL`;
         delButton.onclick = () => deleteSelection(index);
 
         labelDiv.appendChild(label);

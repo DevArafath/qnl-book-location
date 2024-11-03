@@ -46,7 +46,7 @@
 
         <div class="step" id="step5" style="display: none;">
             <h2>Step 5: Enter the Book Code</h2>
-            <input type="text" id="labelInput" placeholder="Enter a label for your selection" />
+            <input type="text" id="labelInput" placeholder="Enter the Book Code" />
             <div class="button-container">
                 <button class="nav-btn" onclick="goToStep('step4')">Back</button>
                 <button class="next-btn" onclick="goToStep('step6')">Next</button>
@@ -61,7 +61,7 @@
             <button class="nav-btn" onclick="goToStep('step5')">Back</button>
         </div>
 
-        <h2>Your Selections:</h2>
+        <h4>Your Saved Books Locations:</h4>
         <div id="resultsContainer"></div>
     </div>
 
@@ -69,7 +69,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <p>Only 6 selections allowed to borrow in a day!</p>
+            <p>Only 6 books allowed to borrow in a day!</p>
         </div>
     </div>
 
