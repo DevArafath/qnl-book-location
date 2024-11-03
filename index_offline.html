@@ -7,10 +7,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- <link rel="stylesheet" href="styles.css"> -->
-
-
 <style>
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -89,9 +87,16 @@ select {
     width: 100%;
 }
 
+input{
+    padding: 13px 2px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 button {
-    margin: 10px;
-    padding: 10px 15px;
+    margin: 5px 5px;
+    padding: 13px 19px;
     cursor: pointer;
     background-color: #800400;
     border: none;
@@ -136,6 +141,12 @@ button {
 }
 #resultsContainer button:nth-of-type(2){
     background-color: crimson;
+    color: #fff;
+    font-weight: bold;
+}
+
+#step6 button:nth-of-type(1){
+    background-color: #800400;
     color: #fff;
     font-weight: bold;
 }
@@ -188,7 +199,9 @@ button {
     color: #555; /* Change color as needed */
 }
 
+
 </style>
+
 </head>
 <body>
     <div class="container">
@@ -254,234 +267,241 @@ button {
         </div>
     </div>
 
-    <!-- <script src="script.js"></script> -->
 <script>
-let selectedNumber = null;
-let additionalOption = null;
-let selectedButton = null;
-let finalOption = null;
-let labelInput = '';
-let savedSelections = [];
+// Variables to store user selections at each step
+let selectedNumber = null; // Stores selected number from dropdown
+let additionalOption = null; // Stores additional option from another dropdown
+let selectedButton = null; // Stores the button selected by the user in Step 1
+let finalOption = null; // Stores the final option selection
+let labelInput = ''; // Stores the label input from the user
+let savedSelections = []; // Array to store all saved selections
 
 // Handle button selection in Step 1
 function selectButton(buttonNumber) {
-    const buttons = document.querySelectorAll('.option-btn');
-    buttons.forEach(btn => btn.classList.remove('selected'));
+    const buttons = document.querySelectorAll('.option-btn'); // Select all buttons with class 'option-btn'
+    buttons.forEach(btn => btn.classList.remove('selected')); // Remove 'selected' class from all buttons
 
-    const selectedBtn = buttons[buttonNumber - 1];
-    selectedBtn.classList.add('selected');
-    selectedButton = buttonNumber;
+    const selectedBtn = buttons[buttonNumber - 1]; // Find the selected button based on the button number
+    selectedBtn.classList.add('selected'); // Add 'selected' class to highlight chosen button
+    selectedButton = buttonNumber; // Store the selected button number
 
-    populateNumberDropdown(buttonNumber);
+    populateNumberDropdown(buttonNumber); // Populate number dropdown based on chosen button
 }
 
 // Populate the number dropdown based on selected section
 function populateNumberDropdown(buttonNumber) {
-    const numberDropdown = document.getElementById('numberDropdown');
-    numberDropdown.innerHTML = ''; // Clear existing options
+    const numberDropdown = document.getElementById('numberDropdown'); // Get the dropdown element
+    numberDropdown.innerHTML = ''; // Clear any existing options in the dropdown
 
+    // Create and add a default option to guide the user
     const defaultOption = document.createElement('option');
-    defaultOption.textContent = 'Select a number';
-    defaultOption.value = '';
-    numberDropdown.appendChild(defaultOption);
+    defaultOption.textContent = 'Select a number'; // Set text for default option
+    defaultOption.value = ''; // Empty value for default option
+    numberDropdown.appendChild(defaultOption); // Add default option to dropdown
 
-    let options = [];
-    if (buttonNumber === 1) options = Array.from({ length: 14 }, (_, i) => i + 1);
-    else if (buttonNumber === 2) options = Array.from({ length: 10 }, (_, i) => i + 1);
+    let options = []; // Initialize an empty array to store numbers for the dropdown
+    // Generate number options based on selected button
+    if (buttonNumber === 1) options = Array.from({ length: 7 }, (_, i) => i + 1);
+    else if (buttonNumber === 2) options = Array.from({ length: 7 }, (_, i) => i + 1);
     else if (buttonNumber === 3) options = Array.from({ length: 5 }, (_, i) => i + 1);
 
+    // Populate dropdown with options based on the selected button
     options.forEach(num => {
         const option = document.createElement('option');
-        option.value = num;
-        option.textContent = num;
-        numberDropdown.appendChild(option);
+        option.value = num; // Set the value to the number
+        option.textContent = num; // Display the number as option text
+        numberDropdown.appendChild(option); // Add option to dropdown
     });
 
+    // Handle change event to move to next step when a number is selected
     numberDropdown.onchange = () => {
-        selectedNumber = numberDropdown.value;
+        selectedNumber = numberDropdown.value; // Store selected number
         if (selectedNumber) {
-            goToStep('step3');
+            goToStep('step3'); // Move to Step 3 if a number is selected
         }
     };
 }
 
 // Populate the additional dropdown based on selected section
 function populateAdditionalDropdown() {
-    const additionalDropdown = document.getElementById('additionalDropdown');
-    additionalDropdown.innerHTML = ''; // Clear existing options
+    const additionalDropdown = document.getElementById('additionalDropdown'); // Get the additional dropdown element
+    additionalDropdown.innerHTML = ''; // Clear any existing options
 
+    // Add default option to additional dropdown
     const defaultOption = document.createElement('option');
-    defaultOption.textContent = 'Select an option';
-    defaultOption.value = '';
-    additionalDropdown.appendChild(defaultOption);
+    defaultOption.textContent = 'Select an option'; // Default text
+    defaultOption.value = ''; // Empty value
+    additionalDropdown.appendChild(defaultOption); // Add default option to dropdown
 
     let options = [];
-    if (selectedButton) options = Array.from({ length: 14 }, (_, i) => i + 1);
+    if (selectedButton) options = Array.from({ length: 50 }, (_, i) => i + 1); // Create options if a button is selected
 
+    // Populate dropdown with options from 1 to 50
     options.forEach(option => {
         const opt = document.createElement('option');
-        opt.value = option;
-        opt.textContent = option;
-        additionalDropdown.appendChild(opt);
+        opt.value = option; // Set value to option number
+        opt.textContent = option; // Display number as text
+        additionalDropdown.appendChild(opt); // Add option to dropdown
     });
 
+    // Handle change event to move to Step 4 when an option is selected
     additionalDropdown.onchange = () => {
-        additionalOption = additionalDropdown.value;
+        additionalOption = additionalDropdown.value; // Store selected additional option
         if (additionalOption) {
-            goToStep('step4');
+            goToStep('step4'); // Move to Step 4
         }
     };
 }
 
 // Handle option selection in Step 4
 function selectOption(option) {
-    finalOption = option;
-    goToStep('step5');
+    finalOption = option; // Store final selected option
+    goToStep('step5'); // Move to Step 5
 }
 
 // Transition between steps
 function goToStep(stepId) {
-    const steps = document.querySelectorAll('.step');
-    steps.forEach(step => step.style.display = 'none');
+    const steps = document.querySelectorAll('.step'); // Select all elements with class 'step'
+    steps.forEach(step => step.style.display = 'none'); // Hide all steps
 
-    document.getElementById(stepId).style.display = 'block';
+    document.getElementById(stepId).style.display = 'block'; // Display the specified step
 
+    // Populate dropdowns as per step requirements
     if (stepId === 'step2') {
         populateNumberDropdown(selectedButton);
     } else if (stepId === 'step3') {
         populateAdditionalDropdown();
     } else if (stepId === 'step5') {
-        document.getElementById('labelInput').value = ''; // Reset label input field
+        document.getElementById('labelInput').value = ''; // Reset label input field for new entry
     } else if (stepId === 'step6') {
-        displayFinalChoices();
+        displayFinalChoices(); // Display final choice for confirmation in Step 6
     }
 }
 
 // Prepare the final choice with the label input
 function prepareFinalChoice() {
-    labelInput = document.getElementById('labelInput').value.trim();
+    labelInput = document.getElementById('labelInput').value.trim().toUpperCase(); // Format label input
     return {
         text: `TIRE: ${selectedButton}. FLOOR: ${selectedNumber}. SHELF: ${additionalOption}.${finalOption}`,
         labelInput: labelInput, // Store the label input separately
-        done: false
+        done: false // Set initial status as not done
     };
 }
 
 // Display final choices for confirmation
 function displayFinalChoices() {
-    const finalChoiceContainer = document.getElementById('finalChoice');
+    const finalChoiceContainer = document.getElementById('finalChoice'); // Get container for final choices
     finalChoiceContainer.innerHTML = ''; // Clear previous content
 
-    const finalSelection = prepareFinalChoice();
+    const finalSelection = prepareFinalChoice(); // Prepare final selection
     const stepsLine = `TIRE: ${selectedButton}. FLOOR: ${selectedNumber}. SHELF: ${additionalOption}.${finalOption}`;
     const labelLine = `Book Code: ${labelInput}`;
 
     finalChoiceContainer.innerHTML = `
         <div class="final-steps">${stepsLine}</div>
         <div class="final-label">${labelLine}</div>
-    `;
+    `; // Display selection details
 }
 
 // Save the current selection
 function saveSelection() {
     if (savedSelections.length >= 6) {
-        openModal();
+        openModal(); // Open modal if max selections reached
         return;
     }
 
-    const selection = prepareFinalChoice();
-    savedSelections.push(selection);
-    localStorage.setItem('userSelections', JSON.stringify(savedSelections));
-    displaySavedSelections();
+    const selection = prepareFinalChoice(); // Prepare current choice for saving
+    savedSelections.push(selection); // Add choice to saved selections array
+    localStorage.setItem('userSelections', JSON.stringify(savedSelections)); // Save to localStorage
+    displaySavedSelections(); // Refresh display
 
-    resetSteps();
+    resetSteps(); // Reset steps for next selection
 }
 
 // Display all saved selections
 function displaySavedSelections() {
-    const resultsContainer = document.getElementById('resultsContainer');
-    resultsContainer.innerHTML = '';
+    const resultsContainer = document.getElementById('resultsContainer'); // Get results container
+    resultsContainer.innerHTML = ''; // Clear previous content
 
     savedSelections.forEach((selection, index) => {
-        const labelDiv = document.createElement('div');
-        labelDiv.className = 'saved-label';
+        const labelDiv = document.createElement('div'); // Create container for each selection
+        labelDiv.className = 'saved-label'; // Assign class for styling
 
-        const stepsLine = selection.text; // Access the text directly
-        const labelLine = `Book Code: ${selection.labelInput}`; // Use the stored labelInput
+        const stepsLine = selection.text; // Access text of selection
+        const labelLine = `Book Code: ${selection.labelInput}`; // Access label input of selection
 
-        const label = document.createElement('div');
+        const label = document.createElement('div'); // Create div for label text
         label.innerHTML = `<div>${stepsLine}</div><div>${labelLine}</div>`;
         if (selection.done) {
-            label.style.textDecoration = "line-through";
+            label.style.textDecoration = "line-through"; // Strike through if marked done
+            label.style.color = "lightgray"; // Gray color
+            label.style.fontStyle = "italic"; // Italicize text
         }
 
+        // Create done and delete buttons
         const doneButton = document.createElement('button');
-        doneButton.innerHTML = `<i class="fas fa-check"></i> DONE`;
-        doneButton.onclick = () => markDone(index);
+        doneButton.innerHTML = `<i class="fas fa-check" style="margin-bottom:5px;"></i> DONE`;
+        doneButton.onclick = () => markDone(index); // Mark as done
 
         const delButton = document.createElement('button');
-        delButton.innerHTML = `<i class="fas fa-trash"></i> DEL`;
-        delButton.onclick = () => deleteSelection(index);
+        delButton.innerHTML = `<i class="fas fa-trash" style="margin-bottom:5px;"></i> DEL`;
+        delButton.onclick = () => deleteSelection(index); // Delete selection
 
+        // Append elements to container
         labelDiv.appendChild(label);
         labelDiv.appendChild(doneButton);
         labelDiv.appendChild(delButton);
-
-        resultsContainer.appendChild(labelDiv);
+        resultsContainer.appendChild(labelDiv); // Add to results container
     });
 }
 
 // Mark a selection as done
 function markDone(index) {
-    // Toggle the done status safely
     if (savedSelections[index]) {
-        savedSelections[index].done = !savedSelections[index].done; // Toggle the done status
-        displaySavedSelections(); // Refresh the display
+        savedSelections[index].done = !savedSelections[index].done; // Toggle done status
+        displaySavedSelections(); // Refresh display
     }
 }
 
 // Delete a saved selection
 function deleteSelection(index) {
-    // Check if the index is valid before deleting
     if (index >= 0 && index < savedSelections.length) {
-        savedSelections.splice(index, 1); // Remove the selection at the index
+        savedSelections.splice(index, 1); // Remove selection from array
         localStorage.setItem('userSelections', JSON.stringify(savedSelections)); // Update local storage
-        displaySavedSelections(); // Refresh the display
+        displaySavedSelections(); // Refresh display
     }
 }
 
 // Open modal for maximum selections
 function openModal() {
-    document.getElementById('modal').style.display = 'block';
+    document.getElementById('modal').style.display = 'block'; // Display modal
 }
 
 // Close modal
 function closeModal() {
-    document.getElementById('modal').style.display = 'none';
+    document.getElementById('modal').style.display = 'none'; // Hide modal
 }
 
-// Reset steps for new selection
+// Reset form steps for new entry
 function resetSteps() {
     selectedNumber = null;
     additionalOption = null;
     selectedButton = null;
     finalOption = null;
-    labelInput = ''; // Reset label input
-    const steps = document.querySelectorAll('.step');
-    steps.forEach(step => step.style.display = 'none');
-    goToStep('step1'); // Reset to first step
+    labelInput = '';
+    document.getElementById('numberDropdown').value = ''; // Reset dropdown
+    goToStep('step1'); // Return to Step 1
 }
 
-// Load previous selections on page load
-window.onload = function() {
-    const savedSelection = localStorage.getItem('userSelections');
-    if (savedSelection) {
-        savedSelections = JSON.parse(savedSelection);
-        console.log('Loaded saved selections:', savedSelections); // Log loaded selections
-        displaySavedSelections();
-    }
+// Load saved selections on page load
+window.onload = () => {
+    savedSelections = JSON.parse(localStorage.getItem('userSelections')) || []; // Load from storage
+    displaySavedSelections(); // Display saved selections
 };
 
+
+
 </script>
+
 </body>
 </html>
